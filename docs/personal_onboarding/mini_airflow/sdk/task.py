@@ -1,7 +1,25 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import timedelta
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from mini_airflow.sdk.dag import DAG
@@ -17,7 +35,7 @@ class BaseOperator:
     def __init__(
         self,
         task_id: str,
-        dag: "DAG | None" = None,
+        dag: DAG | None = None,
         retries: int = 0,
         retry_delay: timedelta = timedelta(seconds=0),
         trigger_rule: TriggerRule = "all_success",
@@ -36,19 +54,19 @@ class BaseOperator:
             raise ValueError(f"Task {task_id!r} must be created inside `with DAG(...)` or passed dag=")
         self.dag.add_task(self)
 
-    def set_downstream(self, other: "BaseOperator") -> "BaseOperator":
+    def set_downstream(self, other: BaseOperator) -> BaseOperator:
         self.downstream_task_ids.add(other.task_id)
         other.upstream_task_ids.add(self.task_id)
         return other
 
-    def set_upstream(self, other: "BaseOperator") -> "BaseOperator":
+    def set_upstream(self, other: BaseOperator) -> BaseOperator:
         other.set_downstream(self)
         return other
 
-    def __rshift__(self, other: "BaseOperator") -> "BaseOperator":
+    def __rshift__(self, other: BaseOperator) -> BaseOperator:
         return self.set_downstream(other)
 
-    def __lshift__(self, other: "BaseOperator") -> "BaseOperator":
+    def __lshift__(self, other: BaseOperator) -> BaseOperator:
         return self.set_upstream(other)
 
     def execute(self, context: dict[str, Any]) -> Any:

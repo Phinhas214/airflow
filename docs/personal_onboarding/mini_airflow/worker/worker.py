@@ -1,3 +1,20 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
 from __future__ import annotations
 
 import logging
@@ -44,7 +61,7 @@ def run_task_instance(task: BaseOperator, ti: TaskInstance, db: MetadataDB) -> N
         db.xcom_push(ti.dag_id, ti.task_id, ti.run_id, result)
         ti.state = TaskInstanceState.SUCCESS
         ti.error = None
-    except Exception as exc:  # noqa: BLE001 - a task callable can raise anything
+    except Exception as exc:
         logger.warning("Task %s/%s failed on try %d: %s", ti.dag_id, ti.task_id, ti.try_number, exc)
         ti.error = str(exc)
         if ti.try_number <= task.retries:
