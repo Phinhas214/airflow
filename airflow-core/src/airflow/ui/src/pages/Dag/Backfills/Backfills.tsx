@@ -19,7 +19,7 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import { useBackfillServiceListBackfillsUi } from "openapi/queries";
 import type { BackfillResponse } from "openapi/requests/types.gen";
@@ -27,7 +27,17 @@ import { DataTable } from "src/components/DataTable";
 import { useTableURLState } from "src/components/DataTable/useTableUrlState";
 import { ErrorAlert } from "src/components/ErrorAlert";
 import Time from "src/components/Time";
+import { SearchParamsKeys, type SearchParamsKeysType } from "src/constants/searchParams";
 import { getDuration } from "src/utils";
+
+import { BackfillsFilters } from "./BackfillsFilters";
+
+const {
+  FROM_DATE_GTE: FROM_DATE_GTE_PARAM,
+  FROM_DATE_LTE: FROM_DATE_LTE_PARAM,
+  TO_DATE_GTE: TO_DATE_GTE_PARAM,
+  TO_DATE_LTE: TO_DATE_LTE_PARAM,
+}: SearchParamsKeysType = SearchParamsKeys;
 
 const getColumns = (translate: (key: string) => string): Array<ColumnDef<BackfillResponse>> => [
   {
@@ -110,11 +120,21 @@ export const Backfills = () => {
   const { pagination } = tableURLState;
 
   const { dagId = "" } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const fromDateGte = searchParams.get(FROM_DATE_GTE_PARAM);
+  const fromDateLte = searchParams.get(FROM_DATE_LTE_PARAM);
+  const toDateGte = searchParams.get(TO_DATE_GTE_PARAM);
+  const toDateLte = searchParams.get(TO_DATE_LTE_PARAM);
 
   const { data, error, isFetching, isLoading } = useBackfillServiceListBackfillsUi({
     dagId,
+    fromDateGte: fromDateGte ?? undefined,
+    fromDateLte: fromDateLte ?? undefined,
     limit: pagination.pageSize,
     offset: pagination.pageIndex * pagination.pageSize,
+    toDateGte: toDateGte ?? undefined,
+    toDateLte: toDateLte ?? undefined,
   });
 
   const columns = getColumns(translate);
@@ -125,6 +145,7 @@ export const Backfills = () => {
       <Heading my={1} size="md">
         {translate("backfill", { count: data ? data.total_entries : 0 })}
       </Heading>
+      <BackfillsFilters />
       <DataTable
         columns={columns}
         data={data ? data.backfills : []}

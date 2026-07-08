@@ -160,6 +160,28 @@ class TestListBackfills(TestBackfillEndpoint):
             "total_entries": total_entries,
         }
 
+    def test_filter_by_from_date_and_to_date_range(self, test_client, session, testing_dag_bundle):
+        dags = self._create_dag_models()
+        early = timezone.datetime(2024, 1, 1)
+        late = timezone.datetime(2024, 6, 1)
+        backfill_early = Backfill(dag_id=dags[0].dag_id, from_date=early, to_date=early)
+        backfill_late = Backfill(dag_id=dags[1].dag_id, from_date=late, to_date=late)
+        session.add_all([backfill_early, backfill_late])
+        session.commit()
+
+        response = test_client.get(
+            "/backfills",
+            params={
+                "from_date_gte": timezone.datetime(2024, 3, 1).isoformat(),
+                "to_date_lte": timezone.datetime(2024, 12, 1).isoformat(),
+            },
+        )
+
+        assert response.status_code == 200
+        body = response.json()
+        assert body["total_entries"] == 1
+        assert body["backfills"][0]["dag_id"] == dags[1].dag_id
+
     def test_should_response_401(self, unauthenticated_test_client):
         response = unauthenticated_test_client.get("/backfills", params={})
         assert response.status_code == 401

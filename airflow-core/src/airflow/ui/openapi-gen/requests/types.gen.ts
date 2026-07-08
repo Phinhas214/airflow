@@ -3003,12 +3003,20 @@ export type CreateBackfillDryRunResponse = DryRunBackfillCollectionResponse;
 export type ListBackfillsUiData = {
     active?: boolean | null;
     dagId?: string | null;
+    fromDateGt?: string | null;
+    fromDateGte?: string | null;
+    fromDateLt?: string | null;
+    fromDateLte?: string | null;
     limit?: number;
     offset?: number;
     /**
      * Attributes to order by, multi criteria sort is supported. Prefix with `-` for descending order. Supported attributes: `id`
      */
     orderBy?: Array<(string)>;
+    toDateGt?: string | null;
+    toDateGte?: string | null;
+    toDateLt?: string | null;
+    toDateLte?: string | null;
 };
 
 export type ListBackfillsUiResponse = BackfillCollectionResponse;

@@ -28,7 +28,9 @@ from airflow.api_fastapi.common.parameters import (
     FilterParam,
     QueryLimit,
     QueryOffset,
+    RangeFilter,
     SortParam,
+    datetime_range_filter_factory,
     filter_param_factory,
 )
 from airflow.api_fastapi.common.router import AirflowRouter
@@ -63,10 +65,12 @@ def list_backfills_ui(
         FilterParam[bool | None],
         Depends(filter_param_factory(Backfill.completed_at, bool | None, FilterOptionEnum.IS_NONE, "active")),
     ],
+    from_date_range: Annotated[RangeFilter, Depends(datetime_range_filter_factory("from_date", Backfill))],
+    to_date_range: Annotated[RangeFilter, Depends(datetime_range_filter_factory("to_date", Backfill))],
 ) -> BackfillCollectionResponse:
     select_stmt, total_entries = paginated_select(
         statement=select(Backfill).options(joinedload(Backfill.dag_model)),
-        filters=[dag_id, active, readable_backfills_filter],
+        filters=[dag_id, active, from_date_range, to_date_range, readable_backfills_filter],
         order_by=order_by,
         offset=offset,
         limit=limit,

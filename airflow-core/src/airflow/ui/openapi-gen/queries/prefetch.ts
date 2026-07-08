@@ -204,16 +204,32 @@ export const prefetchUseBackfillServiceGetBackfill = (queryClient: QueryClient, 
 * @param data.orderBy Attributes to order by, multi criteria sort is supported. Prefix with `-` for descending order. Supported attributes: `id`
 * @param data.dagId
 * @param data.active
+* @param data.fromDateGte
+* @param data.fromDateGt
+* @param data.fromDateLte
+* @param data.fromDateLt
+* @param data.toDateGte
+* @param data.toDateGt
+* @param data.toDateLte
+* @param data.toDateLt
 * @returns BackfillCollectionResponse Successful Response
 * @throws ApiError
 */
-export const prefetchUseBackfillServiceListBackfillsUi = (queryClient: QueryClient, { active, dagId, limit, offset, orderBy }: {
+export const prefetchUseBackfillServiceListBackfillsUi = (queryClient: QueryClient, { active, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy, toDateGt, toDateGte, toDateLt, toDateLte }: {
   active?: boolean;
   dagId?: string;
+  fromDateGt?: string;
+  fromDateGte?: string;
+  fromDateLt?: string;
+  fromDateLte?: string;
   limit?: number;
   offset?: number;
   orderBy?: string[];
-} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseBackfillServiceListBackfillsUiKeyFn({ active, dagId, limit, offset, orderBy }), queryFn: () => BackfillService.listBackfillsUi({ active, dagId, limit, offset, orderBy }) });
+  toDateGt?: string;
+  toDateGte?: string;
+  toDateLt?: string;
+  toDateLte?: string;
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseBackfillServiceListBackfillsUiKeyFn({ active, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy, toDateGt, toDateGte, toDateLt, toDateLte }), queryFn: () => BackfillService.listBackfillsUi({ active, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy, toDateGt, toDateGte, toDateLt, toDateLte }) });
 /**
 * Get Connection
 * Get a connection entry.

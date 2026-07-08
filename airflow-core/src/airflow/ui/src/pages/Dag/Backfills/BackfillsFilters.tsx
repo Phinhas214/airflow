@@ -16,18 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { handlers as backfillsHandlers } from "./backfills";
-import { handlers as configHandlers } from "./config";
-import { handlers as dagHandlers } from "./dag";
-import { handlers as dagRunsHandlers } from "./dag_runs";
-import { handlers as dagsHandlers } from "./dags";
-import { handlers as logHandlers } from "./log";
+import { VStack } from "@chakra-ui/react";
 
-export const handlers = [
-  ...backfillsHandlers,
-  ...configHandlers,
-  ...dagHandlers,
-  ...dagRunsHandlers,
-  ...dagsHandlers,
-  ...logHandlers,
-];
+import { FilterBar } from "src/components/FilterBar";
+import { SearchParamsKeys } from "src/constants/searchParams";
+import { useFiltersHandler, type FilterableSearchParamsKeys } from "src/utils";
+
+export const BackfillsFilters = () => {
+  const searchParamKeys: Array<FilterableSearchParamsKeys> = [
+    SearchParamsKeys.FROM_DATE_RANGE,
+    SearchParamsKeys.TO_DATE_RANGE,
+  ];
+
+  const { filterConfigs, handleFiltersChange, initialValues } = useFiltersHandler(searchParamKeys);
+
+  return (
+    <VStack align="start" gap={4} paddingY="4px">
+      <FilterBar
+        configs={filterConfigs}
+        initialValues={initialValues}
+        onFiltersChange={handleFiltersChange}
+      />
+    </VStack>
+  );
+};

@@ -610,6 +610,14 @@ export class BackfillService {
      * @param data.orderBy Attributes to order by, multi criteria sort is supported. Prefix with `-` for descending order. Supported attributes: `id`
      * @param data.dagId
      * @param data.active
+     * @param data.fromDateGte
+     * @param data.fromDateGt
+     * @param data.fromDateLte
+     * @param data.fromDateLt
+     * @param data.toDateGte
+     * @param data.toDateGt
+     * @param data.toDateLte
+     * @param data.toDateLt
      * @returns BackfillCollectionResponse Successful Response
      * @throws ApiError
      */
@@ -622,7 +630,15 @@ export class BackfillService {
                 offset: data.offset,
                 order_by: data.orderBy,
                 dag_id: data.dagId,
-                active: data.active
+                active: data.active,
+                from_date_gte: data.fromDateGte,
+                from_date_gt: data.fromDateGt,
+                from_date_lte: data.fromDateLte,
+                from_date_lt: data.fromDateLt,
+                to_date_gte: data.toDateGte,
+                to_date_gt: data.toDateGt,
+                to_date_lte: data.toDateLte,
+                to_date_lt: data.toDateLt
             },
             errors: {
                 404: 'Not Found',

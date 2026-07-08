@@ -173,6 +173,13 @@ export const useFilterConfigs = () => {
       label: translate("admin:jobs.columns.executorClass"),
       type: FilterTypes.TEXT,
     },
+    [SearchParamsKeys.FROM_DATE_RANGE]: {
+      endKey: SearchParamsKeys.FROM_DATE_LTE,
+      icon: <MdDateRange />,
+      label: translate("common:startDate"),
+      startKey: SearchParamsKeys.FROM_DATE_GTE,
+      type: FilterTypes.DATERANGE,
+    },
     [SearchParamsKeys.HOSTNAME]: {
       hotkeyDisabled: true,
       icon: <MdComputer />,
@@ -381,6 +388,13 @@ export const useFilterConfigs = () => {
         value: option.value === "all" ? "" : option.value,
       })),
       type: FilterTypes.SELECT,
+    },
+    [SearchParamsKeys.TO_DATE_RANGE]: {
+      endKey: SearchParamsKeys.TO_DATE_LTE,
+      icon: <MdDateRange />,
+      label: translate("common:endDate"),
+      startKey: SearchParamsKeys.TO_DATE_GTE,
+      type: FilterTypes.DATERANGE,
     },
     [SearchParamsKeys.TRIGGERING_USER_NAME_PATTERN]: {
       hotkeyDisabled: true,
