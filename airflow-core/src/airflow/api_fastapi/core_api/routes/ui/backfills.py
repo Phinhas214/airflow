@@ -16,6 +16,7 @@
 # under the License.
 from __future__ import annotations
 
+import logging
 from typing import Annotated
 
 from fastapi import Depends, status
@@ -38,6 +39,8 @@ from airflow.api_fastapi.core_api.openapi.exceptions import (
 )
 from airflow.api_fastapi.core_api.security import ReadableBackfillsFilterDep, requires_access_backfill
 from airflow.models.backfill import Backfill
+
+log = logging.getLogger(__name__)
 
 backfills_router = AirflowRouter(tags=["Backfill"], prefix="/backfills")
 
@@ -76,6 +79,7 @@ def list_backfills_ui(
         BackfillResponse(**row._mapping) if not isinstance(row, Backfill) else row
         for row in session.scalars(select_stmt)
     ]
+    log.warning("inside backfill*******************************************")
     return BackfillCollectionResponse(
         backfills=backfills,
         total_entries=total_entries,
