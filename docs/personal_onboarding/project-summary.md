@@ -289,3 +289,5 @@ documented, intentional current limitation, not a violation — see
 - `contributing-docs/03a_contributors_quick_start_beginners.rst` — environment setup
   from scratch.
 - `dev/breeze/doc/` — how the containerized dev environment and CI selective-checks work.
+
+- Full Architecture Diagram Reference: https://deepwiki.com/apache/airflow/1.1-system-architecture
