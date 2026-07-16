@@ -116,6 +116,11 @@ def list_backfills(
         Depends(requires_access_backfill(method="GET")),
     ],
 )
+
+# add more parameters here to filter response
+# use get_dag_runs from dag_run.py as inpiration for the pattern to follow
+# date range type filters will use RangeFilter build through datetime_range_filter_factory (e.g: start_date, end_date, created_at, completed_at, duration)
+# float range type filters will use FilterParam built through float_range_filter_factory (e.g: reprocess_behavior)
 def get_backfill(
     backfill_id: NonNegativeInt,
     session: SessionDep,
