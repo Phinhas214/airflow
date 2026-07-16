@@ -2962,6 +2962,10 @@ export type NextRunAssetsResponse2 = NextRunAssetsResponse;
 
 export type ListBackfillsData = {
     dagId: string;
+    fromDateGt?: string | null;
+    fromDateGte?: string | null;
+    fromDateLt?: string | null;
+    fromDateLte?: string | null;
     limit?: number;
     offset?: number;
     /**

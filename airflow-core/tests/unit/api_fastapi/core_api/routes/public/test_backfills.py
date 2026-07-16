@@ -161,6 +161,30 @@ class TestListBackfills(TestBackfillEndpoint):
             "total_entries": 1,
         }
 
+    def test_list_backfill_with_from_date_filter(self, test_client, session):
+        (dag,) = self._create_dag_models()
+        base_date = pendulum.parse("2024-01-01")
+        backfills = [
+            Backfill(dag_id=dag.dag_id, from_date=base_date.add(days=day), to_date=base_date.add(days=day))
+            for day in (0, 1, 2)
+        ]
+        session.add_all(backfills)
+        session.commit()
+
+        response = test_client.get(
+            "/backfills",
+            params={
+                "dag_id": dag.dag_id,
+                "from_date_gte": to_iso(base_date.add(days=1)),
+                "from_date_lte": to_iso(base_date.add(days=2)),
+            },
+        )
+
+        assert response.status_code == 200
+        response_json = response.json()
+        assert response_json["total_entries"] == 2
+        assert {b["id"] for b in response_json["backfills"]} == {backfills[1].id, backfills[2].id}
+
 
 class TestGetBackfill(TestBackfillEndpoint):
     def test_get_backfill(self, session, test_client):

@@ -178,16 +178,24 @@ export const ensureUseAssetServiceNextRunAssetsData = (queryClient: QueryClient,
 * @param data.dagId
 * @param data.limit
 * @param data.offset
+* @param data.fromDateGte
+* @param data.fromDateGt
+* @param data.fromDateLte
+* @param data.fromDateLt
 * @param data.orderBy Attributes to order by, multi criteria sort is supported. Prefix with `-` for descending order. Supported attributes: `id`
 * @returns BackfillCollectionResponse Successful Response
 * @throws ApiError
 */
-export const ensureUseBackfillServiceListBackfillsData = (queryClient: QueryClient, { dagId, limit, offset, orderBy }: {
+export const ensureUseBackfillServiceListBackfillsData = (queryClient: QueryClient, { dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }: {
   dagId: string;
+  fromDateGt?: string;
+  fromDateGte?: string;
+  fromDateLt?: string;
+  fromDateLte?: string;
   limit?: number;
   offset?: number;
   orderBy?: string[];
-}) => queryClient.ensureQueryData({ queryKey: Common.UseBackfillServiceListBackfillsKeyFn({ dagId, limit, offset, orderBy }), queryFn: () => BackfillService.listBackfills({ dagId, limit, offset, orderBy }) });
+}) => queryClient.ensureQueryData({ queryKey: Common.UseBackfillServiceListBackfillsKeyFn({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }), queryFn: () => BackfillService.listBackfills({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }) });
 /**
 * Get Backfill
 * @param data The data for the request.

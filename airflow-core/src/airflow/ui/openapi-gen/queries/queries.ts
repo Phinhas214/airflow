@@ -178,16 +178,24 @@ export const useAssetServiceNextRunAssets = <TData = Common.AssetServiceNextRunA
 * @param data.dagId
 * @param data.limit
 * @param data.offset
+* @param data.fromDateGte
+* @param data.fromDateGt
+* @param data.fromDateLte
+* @param data.fromDateLt
 * @param data.orderBy Attributes to order by, multi criteria sort is supported. Prefix with `-` for descending order. Supported attributes: `id`
 * @returns BackfillCollectionResponse Successful Response
 * @throws ApiError
 */
-export const useBackfillServiceListBackfills = <TData = Common.BackfillServiceListBackfillsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ dagId, limit, offset, orderBy }: {
+export const useBackfillServiceListBackfills = <TData = Common.BackfillServiceListBackfillsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }: {
   dagId: string;
+  fromDateGt?: string;
+  fromDateGte?: string;
+  fromDateLt?: string;
+  fromDateLte?: string;
   limit?: number;
   offset?: number;
   orderBy?: string[];
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseBackfillServiceListBackfillsKeyFn({ dagId, limit, offset, orderBy }, queryKey), queryFn: () => BackfillService.listBackfills({ dagId, limit, offset, orderBy }) as TData, ...options });
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseBackfillServiceListBackfillsKeyFn({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }, queryKey), queryFn: () => BackfillService.listBackfills({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }) as TData, ...options });
 /**
 * Get Backfill
 * @param data The data for the request.
