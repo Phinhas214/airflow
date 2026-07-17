@@ -32,11 +32,14 @@ from airflow.api_fastapi.common.db.common import (
     paginated_select,
 )
 from airflow.api_fastapi.common.parameters import (
+    FilterParam,
     QueryLimit,
     QueryOffset,
     RangeFilter,
     SortParam,
     datetime_range_filter_factory,
+    filter_param_factory,
+    float_range_filter_factory,
 )
 from airflow.api_fastapi.common.router import AirflowRouter
 from airflow.api_fastapi.core_api.base import OrmClause
@@ -102,6 +105,13 @@ def list_backfills(
     limit: QueryLimit,
     offset: QueryOffset,
     start_date_range: Annotated[RangeFilter, Depends(datetime_range_filter_factory("from_date", Backfill))],
+    end_date_range: Annotated[RangeFilter, Depends(datetime_range_filter_factory("to_date", Backfill))],
+    created_at: Annotated[RangeFilter, Depends(datetime_range_filter_factory("created_at", Backfill))],
+    completed_at: Annotated[RangeFilter, Depends(datetime_range_filter_factory("completed_at", Backfill))],
+    max_active_runs: Annotated[RangeFilter, Depends(float_range_filter_factory("max_active_runs", Backfill))],
+    reprocess_behavior: Annotated[
+        FilterParam, Depends(filter_param_factory(Backfill.reprocess_behavior, str | None))
+    ],
     order_by: Annotated[
         SortParam,
         Depends(SortParam(["id"], Backfill).dynamic_depends()),
@@ -110,6 +120,11 @@ def list_backfills(
 ) -> BackfillCollectionResponse:
     filters: list[OrmClause] = [
         start_date_range,
+        end_date_range,
+        created_at,
+        completed_at,
+        reprocess_behavior,
+        max_active_runs,
     ]
 
     select_stmt, total_entries = paginated_select(

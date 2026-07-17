@@ -182,20 +182,54 @@ export const useAssetServiceNextRunAssets = <TData = Common.AssetServiceNextRunA
 * @param data.fromDateGt
 * @param data.fromDateLte
 * @param data.fromDateLt
+* @param data.toDateGte
+* @param data.toDateGt
+* @param data.toDateLte
+* @param data.toDateLt
+* @param data.createdAtGte
+* @param data.createdAtGt
+* @param data.createdAtLte
+* @param data.createdAtLt
+* @param data.completedAtGte
+* @param data.completedAtGt
+* @param data.completedAtLte
+* @param data.completedAtLt
+* @param data.maxActiveRunsGte
+* @param data.maxActiveRunsGt
+* @param data.maxActiveRunsLte
+* @param data.maxActiveRunsLt
+* @param data.reprocessBehavior
 * @param data.orderBy Attributes to order by, multi criteria sort is supported. Prefix with `-` for descending order. Supported attributes: `id`
 * @returns BackfillCollectionResponse Successful Response
 * @throws ApiError
 */
-export const useBackfillServiceListBackfills = <TData = Common.BackfillServiceListBackfillsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }: {
+export const useBackfillServiceListBackfills = <TData = Common.BackfillServiceListBackfillsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ completedAtGt, completedAtGte, completedAtLt, completedAtLte, createdAtGt, createdAtGte, createdAtLt, createdAtLte, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, maxActiveRunsGt, maxActiveRunsGte, maxActiveRunsLt, maxActiveRunsLte, offset, orderBy, reprocessBehavior, toDateGt, toDateGte, toDateLt, toDateLte }: {
+  completedAtGt?: string;
+  completedAtGte?: string;
+  completedAtLt?: string;
+  completedAtLte?: string;
+  createdAtGt?: string;
+  createdAtGte?: string;
+  createdAtLt?: string;
+  createdAtLte?: string;
   dagId: string;
   fromDateGt?: string;
   fromDateGte?: string;
   fromDateLt?: string;
   fromDateLte?: string;
   limit?: number;
+  maxActiveRunsGt?: number;
+  maxActiveRunsGte?: number;
+  maxActiveRunsLt?: number;
+  maxActiveRunsLte?: number;
   offset?: number;
   orderBy?: string[];
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseBackfillServiceListBackfillsKeyFn({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }, queryKey), queryFn: () => BackfillService.listBackfills({ dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, offset, orderBy }) as TData, ...options });
+  reprocessBehavior?: string;
+  toDateGt?: string;
+  toDateGte?: string;
+  toDateLt?: string;
+  toDateLte?: string;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseBackfillServiceListBackfillsKeyFn({ completedAtGt, completedAtGte, completedAtLt, completedAtLte, createdAtGt, createdAtGte, createdAtLt, createdAtLte, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, maxActiveRunsGt, maxActiveRunsGte, maxActiveRunsLt, maxActiveRunsLte, offset, orderBy, reprocessBehavior, toDateGt, toDateGte, toDateLt, toDateLte }, queryKey), queryFn: () => BackfillService.listBackfills({ completedAtGt, completedAtGte, completedAtLt, completedAtLte, createdAtGt, createdAtGte, createdAtLt, createdAtLte, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, maxActiveRunsGt, maxActiveRunsGte, maxActiveRunsLt, maxActiveRunsLte, offset, orderBy, reprocessBehavior, toDateGt, toDateGte, toDateLt, toDateLte }) as TData, ...options });
 /**
 * Get Backfill
 * @param data The data for the request.
