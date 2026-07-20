@@ -31,8 +31,18 @@ from airflow.api_fastapi.common.db.common import (
     SessionDep,
     paginated_select,
 )
-from airflow.api_fastapi.common.parameters import QueryLimit, QueryOffset, SortParam
+from airflow.api_fastapi.common.parameters import (
+    FilterParam,
+    QueryLimit,
+    QueryOffset,
+    RangeFilter,
+    SortParam,
+    datetime_range_filter_factory,
+    filter_param_factory,
+    float_range_filter_factory,
+)
 from airflow.api_fastapi.common.router import AirflowRouter
+from airflow.api_fastapi.core_api.base import OrmClause
 from airflow.api_fastapi.core_api.datamodels.backfills import (
     BackfillCollectionResponse,
     BackfillDagRunCollectionResponse,
@@ -87,18 +97,40 @@ def _raise_locked_response_or_reraise(e: OperationalError, action: str) -> NoRet
         Depends(requires_access_backfill(method="GET")),
     ],
 )
+# add more parameters here to filter response
+# use get_dag_runs from dag_run.py as inpiration for the pattern to follow
+# date range type filters will use RangeFilter build through datetime_range_filter_factory (e.g: start_date, end_date, created_at, completed_at, duration)
+# float range type filters will use FilterParam built through float_range_filter_factory (e.g: reprocess_behavior)
 def list_backfills(
     dag_id: str,
     limit: QueryLimit,
     offset: QueryOffset,
+    start_date_range: Annotated[RangeFilter, Depends(datetime_range_filter_factory("from_date", Backfill))],
+    end_date_range: Annotated[RangeFilter, Depends(datetime_range_filter_factory("to_date", Backfill))],
+    created_at: Annotated[RangeFilter, Depends(datetime_range_filter_factory("created_at", Backfill))],
+    completed_at: Annotated[RangeFilter, Depends(datetime_range_filter_factory("completed_at", Backfill))],
+    max_active_runs: Annotated[RangeFilter, Depends(float_range_filter_factory("max_active_runs", Backfill))],
+    reprocess_behavior: Annotated[
+        FilterParam, Depends(filter_param_factory(Backfill.reprocess_behavior, str | None))
+    ],
     order_by: Annotated[
         SortParam,
         Depends(SortParam(["id"], Backfill).dynamic_depends()),
     ],
     session: SessionDep,
 ) -> BackfillCollectionResponse:
+    filters: list[OrmClause] = [
+        start_date_range,
+        end_date_range,
+        created_at,
+        completed_at,
+        reprocess_behavior,
+        max_active_runs,
+    ]
+
     select_stmt, total_entries = paginated_select(
         statement=select(Backfill).where(Backfill.dag_id == dag_id).options(joinedload(Backfill.dag_model)),
+        filters=filters,
         order_by=order_by,
         offset=offset,
         limit=limit,

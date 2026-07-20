@@ -93,12 +93,33 @@ export const UseAssetServiceNextRunAssetsKeyFn = ({ dagId }: {
 export type BackfillServiceListBackfillsDefaultResponse = Awaited<ReturnType<typeof BackfillService.listBackfills>>;
 export type BackfillServiceListBackfillsQueryResult<TData = BackfillServiceListBackfillsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useBackfillServiceListBackfillsKey = "BackfillServiceListBackfills";
-export const UseBackfillServiceListBackfillsKeyFn = ({ dagId, limit, offset, orderBy }: {
+export const UseBackfillServiceListBackfillsKeyFn = ({ completedAtGt, completedAtGte, completedAtLt, completedAtLte, createdAtGt, createdAtGte, createdAtLt, createdAtLte, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, maxActiveRunsGt, maxActiveRunsGte, maxActiveRunsLt, maxActiveRunsLte, offset, orderBy, reprocessBehavior, toDateGt, toDateGte, toDateLt, toDateLte }: {
+  completedAtGt?: string;
+  completedAtGte?: string;
+  completedAtLt?: string;
+  completedAtLte?: string;
+  createdAtGt?: string;
+  createdAtGte?: string;
+  createdAtLt?: string;
+  createdAtLte?: string;
   dagId: string;
+  fromDateGt?: string;
+  fromDateGte?: string;
+  fromDateLt?: string;
+  fromDateLte?: string;
   limit?: number;
+  maxActiveRunsGt?: number;
+  maxActiveRunsGte?: number;
+  maxActiveRunsLt?: number;
+  maxActiveRunsLte?: number;
   offset?: number;
   orderBy?: string[];
-}, queryKey?: Array<unknown>) => [useBackfillServiceListBackfillsKey, ...(queryKey ?? [{ dagId, limit, offset, orderBy }])];
+  reprocessBehavior?: string;
+  toDateGt?: string;
+  toDateGte?: string;
+  toDateLt?: string;
+  toDateLte?: string;
+}, queryKey?: Array<unknown>) => [useBackfillServiceListBackfillsKey, ...(queryKey ?? [{ completedAtGt, completedAtGte, completedAtLt, completedAtLte, createdAtGt, createdAtGte, createdAtLt, createdAtLte, dagId, fromDateGt, fromDateGte, fromDateLt, fromDateLte, limit, maxActiveRunsGt, maxActiveRunsGte, maxActiveRunsLt, maxActiveRunsLte, offset, orderBy, reprocessBehavior, toDateGt, toDateGte, toDateLt, toDateLte }])];
 export type BackfillServiceGetBackfillDefaultResponse = Awaited<ReturnType<typeof BackfillService.getBackfill>>;
 export type BackfillServiceGetBackfillQueryResult<TData = BackfillServiceGetBackfillDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useBackfillServiceGetBackfillKey = "BackfillServiceGetBackfill";
